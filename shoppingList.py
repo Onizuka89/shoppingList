@@ -1,6 +1,28 @@
 #!/usr/bin/python
 # -*- encoding:utf-8 -*-
 import sys
+import pickle
+
+#
+# Edit to change place to store your pickle
+#
+
+filepath = "./pickle"
+
+# Try to open file, to see if it exist, and
+# if it fail it will make the file.
+
+try:
+	file = open(filepath,"r")
+	list = cPickle.loud(file)
+	file.close()
+except IOError:
+	file = open(filepath,"w")
+	file.close()
+except EOFError:
+	print "The program met an unexpected end, which probably means this is the first time running this program, or that the file is corrupted."
+
+
 # List with the items to buy
 list = []
 
@@ -42,7 +64,6 @@ def eventHandler():
 			printList()
 		elif sys.argv[1] == "-h" or sys.argv[1] == "--help":
 			printHelp()
-
 	
 # Temporary testing lines
 addItem("Jimmy Hendrix")
