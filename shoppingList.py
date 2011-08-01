@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- encoding:utf-8 -*-
 import sys
+
 # List with the items to buy
 list = []
 
@@ -10,7 +11,7 @@ def addItem(x):
 	list.append(x)
 	print x,"is added to the shopping list"
 
-#function to remove items
+# Function to remove items
 def removeItems(name_of_item):
 	# Goes through list looking for a match
 	# if no match found it will give a 
