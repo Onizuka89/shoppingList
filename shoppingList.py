@@ -85,13 +85,25 @@ def eventHandler():
 		else:
 			printHelp()
 	
-	if len(sys.argv) == 1 or len(sys.argv) > 3:
+	if len(sys.argv) > 3:
 		printHelp()
 
 def clearList():
 	file = open(filepath,"w")
 	file.close();
 
+
+def guiAddItem(thisX):
+	list.append(thisX)
+	file=open(filepath,"w")
+	cPickle.dump(list,file)
+	file.close()
+
+def guiRemoveItem(thisX):
+	removeItems(thisX)
+	file=open(filepath,"w")
+	cPickle.dump(list,file)
+	file.close()
 
 # Start eventHandler
 
