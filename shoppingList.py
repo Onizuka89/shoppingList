@@ -27,6 +27,7 @@ except EOFError:
 
 # A fuction to add items to the shopping list
 
+
 def addItem(x):
 	list.append(x)
 	print x,"is added to the shopping list"
