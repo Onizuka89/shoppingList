@@ -20,7 +20,7 @@ class Application(Frame):
 		shoppingList.printList()
 	
 	def createWindow(self):
-		#settings fro the grid
+		#settings for the grid
 		self.master.rowconfigure(0, weight = 1)
 		self.master.columnconfigure(0, weight = 1)
 		self.grid(sticky = W+E+N+S)
@@ -48,8 +48,8 @@ class Application(Frame):
 		self.deleteButton["command"] = self.removeFromList
 		
 		# Creates a Listbox.	
-		self.listbox = Listbox(root)
-		self.listbox.grid(row=3, columnspan=3)		
+		self.listbox = Listbox(self)
+		self.listbox.grid(columnspan=3,rowspan=3,pady=5, ipadx=100)		
 		self.updateList()	
 
 	def updateList(self):		
