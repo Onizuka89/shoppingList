@@ -16,15 +16,28 @@ class Application(Frame):
 		shoppingList.guiRemoveItem(self.text1.get(1.0,END).strip())
 		self.updateList()
 			
-	def displayText(self):
-		shoppingList.printList()
+	# Window that appear when choosing "Connect..."
+	def Preferences(self):
+		other = Toplevel()
+		other.title("Second Window")
+		other.description = Label(other, height=2, width=20)
+		other.description["text"] = "Enter server name:"
+		other.description.grid(row=0, column=0, columnspan=2)
+	
+	# Makes the menu
+	def createMenu(self):
+		self.menu = Menu(self)
+		self.master.config(menu=self.menu)
+		self.tkMenu = Menu(self.menu) 
+		self.menu.add_cascade(label="Tkmenu", menu=self.tkMenu)
+		self.tkMenu.add_command(label="Connect...", command=self.Preferences)	
 	
 	def createWindow(self):
+		self.createMenu()
 		#settings for the grid
 		self.master.rowconfigure(0, weight = 1)
 		self.master.columnconfigure(0, weight = 1)
-		self.grid(sticky = W+E+N+S)
-	
+		self.grid(sticky = W+E+N+S)			
 		# Useless text
 		self.entryLabel = Label(self, height=2, width=20)
 		self.entryLabel["text"] = "Enter item name:"
@@ -59,6 +72,7 @@ class Application(Frame):
 			self.listbox.insert(END, i)
 	
 	def __init__(self, master=None):
+		
 		Frame.__init__(self, master)
 		self.pack()
 		self.createWindow()
