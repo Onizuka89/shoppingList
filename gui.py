@@ -4,7 +4,10 @@
 from Tkinter import *
 import shoppingList
 
+
 class Application(Frame):	
+	
+	
 	def addToList(self):
 		shoppingList.guiAddItem(self.text1.get(1.0,END).strip())
 		shoppingList.printList()
@@ -44,13 +47,14 @@ class Application(Frame):
 		self.deleteButton["text"] = "Remove"
 		self.deleteButton["command"] = self.removeFromList
 		
-		
-		index = 2
-
+		# Listbox with items
+		self.listbox = Listbox(root)
+		self.listbox.grid(column=0, row=3, columnspan=3)		
+		self.listbox.delete(0,END)
 		for i in shoppingList.list:
-			Message(self, text=str(i),width=200).grid(column=0,row=index)
-			index += 1
-
+			self.listbox.insert(END, i)
+		self.after(200, self.createWindow)
+	
 	def __init__(self, master=None):
 		Frame.__init__(self, master)
 		self.pack()
