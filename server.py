@@ -8,16 +8,17 @@ def handler(req):
 	req.log_error('handler')
 	req.content_type = "text/plain"
 	req.send_http_header()
-	PICKLE = "/home/studenter/it09/stiansd/htdocs/python/pickle"
+	PICKLE ="/home/studenter/it09/stiansd/htdocs/python/pickle"
+	CONFIG = "/home/studenter/it09/stiansd/htdocs/python/config.cfg"
 	form = util.FieldStorage(req,keep_blank_values=4)
 	who = form.get("who",None)
 	password = form.get("pass",None)
 	request = form.get("cmd",None)
 	item = form.get("item",None)
 	try:
-		config = open("/home/studenter/it09/stiansd/htdocs/python/config.cfg","r")
+		config = open(CONFIG,"r")
 	except IOError:
-		config = open(abspath("config.cfg"),"w")		
+		config = open(CONFIG,"w")		
 	user = ""
 	Password = ""
 	
