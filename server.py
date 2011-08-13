@@ -34,7 +34,7 @@ def handler(req):
 	if who == user and Password == password:
 		if request == "REQ":
 			file = open(PICKLE,"r")
-			req.write(str(cPickle.load(file)))
+			req.write(file.read())
 			file.close()
 			return apache.OK
 		elif request == "ADD" or request == "REM":
