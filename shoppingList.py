@@ -1,13 +1,21 @@
 #!/usr/bin/python
 # -*- encoding:utf-8 -*-
-import sys
+from sys import argv
 import cPickle
+from urllib2 import urlopen
 
-#
-# Edit to change place to store your pickle
-#
 
+# -----------------------------------------------------------
+# --------------------- VARIABLES ---------------------------
+# -----------------------------------------------------------
+# -----------------------------------------------------------
+
+usr = ""
 filepath = "./pickle"
+CONFIG = "./sconfig"
+password = ""
+server = ""
+serverPicklePath = "./sPickle"
 
 # Try to open file, to see if it exist, and
 # if it fail it will make the file.
@@ -23,11 +31,69 @@ except IOError:
 except EOFError:
 	print "The program met an unexpected end, which probably means this is the first time running this program, or that the file is corrupted."
 
-# List with the items to buy
+
+# -----------------------------------------------------------
+# ---------------- SERVER RELATED FUNCTIONS -----------------
+# -----------------------------------------------------------
+# -----------------------------------------------------------
+
+# A function for loading settings from a config file:
+def getSettings(test=False):
+	config = open(CONFIG,"r")
+	global usr
+	global password
+	global server
+	for setting in config:
+		parts = setting.split("=")
+		if parts[0] == "USER":
+			usr = parts[1].rstrip("\n")
+		elif parts[0] == "PASS":
+			password = parts[1].rstrip("\n")
+		elif parts[0] == "SERVER":
+			server = parts[1].rstrip("\n")
+	if usr == "" or password == "" or server == "" and test == False:
+		if usr == "":
+			print "Set usr"
+		if password == "":
+			print "Set password"
+		if server == "":
+			print "Set server"
+		exit()
+	#TODO
+	
+# A function for getting the pickle from the server.
+def getPickleServer():
+	getSettings()
+	address = server+"?who="+usr+"&pass="+password+"&cmd=REQ"
+	response = urlopen(address)
+	serverPickle = open(serverPicklePath,"w")
+	serverPickle.write(response.read())
+	serverPickle.close()
+	#TODO - finish up
+
+def printPickleServer():
+	getPickleServer()
+	serverPickle = open(serverPicklePath,"r")
+	serverList = cPickle.load(serverPickle)
+	printList(serverList)
+	serverPickle.close()
+
+def addPickleServer(item):
+	getSettings()
+	address = server+"?who="+usr+"&pass="+password+"&cmd=ADD&item="+item
+	response = urlopen(address)
+		
+def removePickleServer(item):
+	getSettings()
+	address = server+"?who="+usr+"&pass="+password+"&cmd=REM&item="+item
+	response = urlopen(address)
+
+# -----------------------------------------------------------
+# ---------------- INTERNAL FUNCTIONS -----------------------
+# -----------------------------------------------------------
+# -----------------------------------------------------------
 
 # A fuction to add items to the shopping list
-
-
 def addItem(x):
 	list.append(x)
 	print x,"is added to the shopping list"
@@ -47,24 +113,39 @@ def removeItems(name_of_item):
 	print "The item,",name_of_item,"was not found in the list."
 
 # Simply prints out the items on the list.
-def printList():
-	print list;
-	for i in list:
+def printList(thisList):
+	for i in thisList:
 		print i
 
+# Print help menu
 def printHelp():
 	print "Options\n----------------\n -h or --help - displays this.\n -a  - add the following string to the shopping list. \n -r  - remove the following string  from the list, if found.\n -p or --print - prints the items currently on the list\n"
 
-# An event handler, basicly the main body.
+
+# -----------------------------------------------------------
+# ----------------------- MAIN BODY -------------------------
+# -----------------------------------------------------------
+# -----------------------------------------------------------
+
 def eventHandler():
 	valid = False
-	if len(sys.argv) == 3:
-		if(sys.argv[1] == "-a"):
-			addItem(sys.argv[2])
+	if len(argv) == 3:
+		# If sys holds 3 arguments it will check if the second
+		# hold one of the 4 commands that match.
+
+		if(argv[1] == "-a"):
+			addItem(argv[2])
 			valid = True
-		elif(sys.argv[1] == "-r"):
-			removeItems(sys.argv[2])
+		elif(argv[1] == "-r"):
+			removeItems(argv[2])
 			valid = True
+		elif(argv[1] == "--sadd"):
+			addPickleServer(argv[2])
+		elif(argv[1] == "--srem"):
+			removePickleServer(argv[2])
+		else:
+			printHelp()
+	
 		if valid:
 			try:
 				file = open(filepath,"w")
@@ -72,21 +153,18 @@ def eventHandler():
 				file.close()
 			except IOError:
 				print "Something went wrong, when writing or opening the storage file."
-		else:
-			print "Ooops, something went wrong."
-			print printHelp()
 
-	elif len(sys.argv) == 2:
-		if sys.argv[1] == "-p" or sys.argv[1] == "--print":
-			printList()
-		elif sys.argv[1] == "-h" or sys.argv[1] == "--help":
+	elif len(argv) == 2:
+		if argv[1] == "-p" or argv[1] == "--print":
+			printList(list)
+		elif argv[1] == "-h" or argv[1] == "--help":
 			printHelp()
-		elif sys.argv[1] == "--clear":
+		elif argv[1] == "--clear":
 			clearList()
 		else:
 			printHelp()
 	
-	if len(sys.argv) > 3:
+	if len(argv) > 3:
 		printHelp()
 
 def clearList():
