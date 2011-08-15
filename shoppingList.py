@@ -32,6 +32,13 @@ except EOFError:
 	print "The program met an unexpected end, which probably means this is the first time running this program, or that the file is corrupted."
 
 
+try:
+	config = open(CONFIG,"r")
+	config.close()
+except IOError:
+	config = open(CONFIG,"w")
+	config.close()
+
 # -----------------------------------------------------------
 # ---------------- SERVER RELATED FUNCTIONS -----------------
 # -----------------------------------------------------------
@@ -65,7 +72,6 @@ def getSettings(test=False):
 def getPickleServer():
 	getSettings()
 	address = server+"?who="+usr+"&pass="+password+"&cmd=REQ"
-	print address
 	response = urlopen(address)
 	serverPickle = open(serverPicklePath,"w")
 	serverPickle.write(response.read())
