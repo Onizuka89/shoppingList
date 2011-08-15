@@ -71,6 +71,32 @@ def getPickleServer():
 	serverPickle.close()
 	#TODO - finish up
 
+def makeNewConfig():
+	config = open(CONFIG,"w")
+	config.write("SERVER="+server+"\n")
+	config.write("USER="+usr+"\n")
+	config.write("PASS="+password)
+	config.close()
+
+def defineServer(name):
+	getSettings(True)
+	global server
+	server = name
+	makeNewConfig()
+
+def defineUser(name):
+	getSettings(True)
+	global usr
+	usr = name
+	makeNewConfig()
+
+def definePassword(name):
+	getSettings(True)
+	global password
+	password = name
+	makeNewConfig()
+
+
 def printPickleServer():
 	getPickleServer()
 	serverPickle = open(serverPicklePath,"r")
@@ -143,6 +169,12 @@ def eventHandler():
 			addPickleServer(argv[2])
 		elif(argv[1] == "--srem"):
 			removePickleServer(argv[2])
+		elif(argv[1] == "--server"):
+			defineServer(argv[2])
+		elif(argv[1] == "--user"):
+			defineUser(argv[2])
+		elif(argv[1] == "--password"):
+			definePassword(argv[2])
 		else:
 			printHelp()
 	
