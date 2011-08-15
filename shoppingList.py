@@ -51,7 +51,7 @@ def getSettings(test=False):
 			password = parts[1].rstrip("\n")
 		elif parts[0] == "SERVER":
 			server = parts[1].rstrip("\n")
-	if usr == "" or password == "" or server == "" and test == False:
+	if (usr == "" or password == "" or server == "") and test == False:
 		if usr == "":
 			print "Set usr"
 		if password == "":
@@ -65,6 +65,7 @@ def getSettings(test=False):
 def getPickleServer():
 	getSettings()
 	address = server+"?who="+usr+"&pass="+password+"&cmd=REQ"
+	print address
 	response = urlopen(address)
 	serverPickle = open(serverPicklePath,"w")
 	serverPickle.write(response.read())
@@ -146,7 +147,8 @@ def printList(thisList):
 # Print help menu
 def printHelp():
 	print "Options\n----------------\n -h or --help - displays this.\n -a  - add the following string to the shopping list. \n -r  - remove the following string  from the list, if found.\n -p or --print - prints the items currently on the list\n"
-
+	print " --user - set username for external server\n --password - set password for external server\n --server - set server address\n"
+	print " --sadd - add item to server shoppingList\n --srem - remove item from server shoppingList\n --serverList - print the list from the server\n"
 
 # -----------------------------------------------------------
 # ----------------------- MAIN BODY -------------------------
@@ -192,7 +194,9 @@ def eventHandler():
 		elif argv[1] == "-h" or argv[1] == "--help":
 			printHelp()
 		elif argv[1] == "--clear":
-			clearList()
+			clearList()	
+		elif(argv[1] == "--serverList"):
+			printPickleServer()
 		else:
 			printHelp()
 	
