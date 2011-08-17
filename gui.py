@@ -20,16 +20,30 @@ class Application(Frame):
 	def Preferences(self):
 		other = Toplevel()
 		other.title("Second Window")
-		other.description = Label(other, height=2, width=20)
-		other.description["text"] = "Enter server name:"
-		other.description.grid(row=0, column=0, columnspan=2)
-	
+		# First line
+		other.description = Label(other, height=1, width=15,)
+		other.description["text"] = "Server:"
+		other.description.grid(row=0, column=0, columnspan=1)
+		shoppingList.getSettings(True)
+		other.inputServer = Text(other,height=1, width=60)
+		other.inputServer.grid(column=2, row=0, columnspan=2,padx=3,pady=3)
+		other.inputServer.insert(INSERT,shoppingList.server)
+			
+		# Second line
+		other.description2 = Label(other, height=1, width=15)
+		other.description2.grid(row=1, column=0, columnspan=1)
+		other.description2["text"] = "Username:"
+		other.username = Text(other,height=1, width=60)
+		other.username.grid(row=1, column=2, columnspan=2,padx=3,pady=3)
+		other.username.insert(INSERT,shoppingList.usr)
+		
+
 	# Makes the menu
 	def createMenu(self):
 		self.menu = Menu(self)
 		self.master.config(menu=self.menu)
 		self.tkMenu = Menu(self.menu) 
-		self.menu.add_cascade(label="Tkmenu", menu=self.tkMenu)
+		self.menu.add_cascade(label="ShoppingList", menu=self.tkMenu)
 		self.tkMenu.add_command(label="Connect...", command=self.Preferences)	
 	
 	def createWindow(self):
