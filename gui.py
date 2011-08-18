@@ -7,7 +7,12 @@ import shoppingList
 
 class Application(Frame):	
 	
-	
+	def saveSettings(self):
+		shoppingList.defineServer(self.other.inputServer.get(1.0,END).strip())
+		print self.other.inputServer.get(1.0,END).strip()
+		shoppingList.defineUser(self.other.username.get(1.0,END).strip())
+		shoppingList.definePassword(self.other.password.get(1.0,END).strip())
+
 	def addToList(self):
 		shoppingList.guiAddItem(self.text1.get(1.0,END).strip())
 		self.updateList()
@@ -18,25 +23,39 @@ class Application(Frame):
 			
 	# Window that appear when choosing "Connect..."
 	def Preferences(self):
-		other = Toplevel()
-		other.title("Second Window")
+		self.other = Toplevel()
+		self.other.title("Second Window")
+
+
 		# First line
-		other.description = Label(other, height=1, width=15,)
-		other.description["text"] = "Server:"
-		other.description.grid(row=0, column=0, columnspan=1)
+		self.other.description = Label(self.other, height=1, width=15,)
+		self.other.description["text"] = "Server:"
+		self.other.description.grid(row=0, column=0, columnspan=1)
 		shoppingList.getSettings(True)
-		other.inputServer = Text(other,height=1, width=60)
-		other.inputServer.grid(column=2, row=0, columnspan=2,padx=3,pady=3)
-		other.inputServer.insert(INSERT,shoppingList.server)
+		self.other.inputServer = Text(self.other,height=1, width=60)
+		self.other.inputServer.grid(column=2, row=0, columnspan=2,padx=3,pady=3)
+		self.other.inputServer.insert(INSERT,shoppingList.server)
 			
 		# Second line
-		other.description2 = Label(other, height=1, width=15)
-		other.description2.grid(row=1, column=0, columnspan=1)
-		other.description2["text"] = "Username:"
-		other.username = Text(other,height=1, width=60)
-		other.username.grid(row=1, column=2, columnspan=2,padx=3,pady=3)
-		other.username.insert(INSERT,shoppingList.usr)
+		self.other.description2 = Label(self.other, height=1, width=15)
+		self.other.description2.grid(row=1, column=0, columnspan=1)
+		self.other.description2["text"] = "Username:"
+		self.other.username = Text(self.other,height=1, width=60)
+		self.other.username.grid(row=1, column=2, columnspan=2,padx=3,pady=3)
+		self.other.username.insert(INSERT,shoppingList.usr)
 		
+		# Third line
+		self.other.description3 = Label(self.other, height=1, width=15)
+		self.other.description3.grid(row=2, column=0, columnspan=1)
+		self.other.description3["text"] = "Password:"
+		self.other.password = Text(self.other,height=1, width=60)
+		self.other.password.grid(row=2, column=2, columnspan=2,padx=3,pady=3)
+		self.other.password.insert(INSERT, shoppingList.password)
+		
+		self.other.acceptSettings = Button(self.other)
+		self.other.acceptSettings.grid(row=3, column=1)
+		self.other.acceptSettings["text"] = "Save settings"
+		self.other.acceptSettings["command"] = self.saveSettings		
 
 	# Makes the menu
 	def createMenu(self):
