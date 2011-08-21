@@ -12,6 +12,8 @@ class Application(Frame):
 		print self.other.inputServer.get(1.0,END).strip()
 		shoppingList.defineUser(self.other.username.get(1.0,END).strip())
 		shoppingList.definePassword(self.other.password.get(1.0,END).strip())
+		shoppingList.defineChecked(self.other.var.get())
+		self.updateList()
 
 	def addToList(self):
 		shoppingList.guiAddItem(self.text1.get(1.0,END).strip())
@@ -25,7 +27,6 @@ class Application(Frame):
 	def Preferences(self):
 		self.other = Toplevel()
 		self.other.title("Second Window")
-
 
 		# First line
 		self.other.description = Label(self.other, height=1, width=15,)
@@ -51,9 +52,18 @@ class Application(Frame):
 		self.other.password = Text(self.other,height=1, width=60)
 		self.other.password.grid(row=2, column=2, columnspan=2,padx=3,pady=3)
 		self.other.password.insert(INSERT, shoppingList.password)
-		
+	
+		# Check box	
+		self.other.var = IntVar()
+		self.other.checkbox = Checkbutton(self.other, text="Use?", offvalue=False,onvalue=True,variable=self.other.var)
+		self.other.checkbox.grid(row=3,column=0)
+		if shoppingList.checked == True:
+			self.other.checkbox.select()
+
+
+		# Save settings
 		self.other.acceptSettings = Button(self.other)
-		self.other.acceptSettings.grid(row=3, column=1)
+		self.other.acceptSettings.grid(row=3, column=2)
 		self.other.acceptSettings["text"] = "Save settings"
 		self.other.acceptSettings["command"] = self.saveSettings		
 
@@ -68,6 +78,7 @@ class Application(Frame):
 	def createWindow(self):
 		self.createMenu()
 		#settings for the grid
+		shoppingList.getSettings(True)
 		self.master.rowconfigure(0, weight = 1)
 		self.master.columnconfigure(0, weight = 1)
 		self.grid(sticky = W+E+N+S)			
@@ -98,11 +109,33 @@ class Application(Frame):
 		self.listbox.grid(columnspan=3,rowspan=3,pady=5, ipadx=100)		
 		self.updateList()	
 
+	def addSGui(self):
+		shoppingList.addPickleServer(self.text1.get(1.0,END).strip())
+		self.updateList()
+	
+	def remSGui(self):
+		shoppingList.removePickleServer(self.text1.get(1.0,END).strip())
+		self.updateList()
+
 	def updateList(self):		
 		# Listbox with items
 		self.listbox.delete(0,END)
-		for i in shoppingList.list:
-			self.listbox.insert(END, i)
+		shoppingList.printPickleServer()
+		if shoppingList.checked == False:	
+			for i in shoppingList.list:
+				self.listbox.insert(END, i)
+		elif shoppingList.checked == True:
+			for i in shoppingList.serverList:
+				self.listbox.insert(END, i)
+		if shoppingList.checked == True:
+			self.sendButton["command"] = self.addSGui
+		elif shoppingList.checked == False:
+			self.sendButton["command"] = self.addToList		
+		if shoppingList.checked == True:
+			self.deleteButton["command"] = self.remSGui
+		elif shoppingList.checked == False:
+			self.deleteButton["command"] = self.removeFromList
+
 	
 	def __init__(self, master=None):
 		

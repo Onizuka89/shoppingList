@@ -10,11 +10,13 @@ from urllib2 import urlopen
 # -----------------------------------------------------------
 # -----------------------------------------------------------
 
+serverList = []
 usr = ""
 filepath = "./pickle"
 CONFIG = "./sconfig"
 password = ""
 server = ""
+checked = False
 serverPicklePath = "./sPickle"
 
 # Try to open file, to see if it exist, and
@@ -50,6 +52,7 @@ def getSettings(test=False):
 	global usr
 	global password
 	global server
+	global checked
 	for setting in config:
 		parts = setting.split("=")
 		if parts[0] == "USER":
@@ -58,6 +61,12 @@ def getSettings(test=False):
 			password = parts[1].rstrip("\n")
 		elif parts[0] == "SERVER":
 			server = parts[1].rstrip("\n")
+		elif parts[0] == "CHECK":
+			if parts[1].rstrip("\n") == "1":
+				checked = True
+			elif parts[1].rstrip("\n") == "0":
+				checked = False
+
 	if (usr == "" or password == "" or server == "") and test == False:
 		if usr == "":
 			print "Set usr"
@@ -82,7 +91,8 @@ def makeNewConfig():
 	config = open(CONFIG,"w")
 	config.write("SERVER="+server+"\n")
 	config.write("USER="+usr+"\n")
-	config.write("PASS="+password)
+	config.write("PASS="+password+"\n")
+	config.write("CHECK="+str(checked))
 	config.close()
 
 def defineServer(name):
@@ -103,10 +113,17 @@ def definePassword(name):
 	password = name
 	makeNewConfig()
 
+def defineChecked(value):
+	getSettings(True)
+	global checked
+	checked = value
+	makeNewConfig()
+
 
 def printPickleServer():
 	getPickleServer()
 	serverPickle = open(serverPicklePath,"r")
+	global serverList
 	serverList = cPickle.load(serverPickle)
 	printList(serverList)
 	serverPickle.close()
@@ -227,5 +244,5 @@ def guiRemoveItem(thisX):
 	file.close()
 
 # Start eventHandler
-
+getSettings(True)
 eventHandler()
