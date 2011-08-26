@@ -3,10 +3,37 @@
 
 from Tkinter import *
 import shoppingList
-version = 0
+import updateChecker
+version = 1
 
 class Application(Frame):	
-	
+
+	def checkVersion(self):
+		self.version = Toplevel()
+		self.version.title("Version check")
+		
+		# First line
+		self.version.description = Label(self.version, height=1, width=15)
+		self.version.description["text"] = "Gui: "
+		self.version.description.grid(row=0,column=0,columnspan=1)
+		self.version.result = Label(self.version,height=1,width=15)
+		if updateChecker.guiCheck(version) == 1:
+			self.version.result["text"] = "It is up to date"
+		elif updateChecker.guiCheck(version) == 0:
+			self.version.result["text"] = "It is outdated"
+		self.version.result.grid(row = 0, column=1, columnspan=1)
+
+		# Second line
+		self.version.description2 = Label(self.version,height=1,width=15)
+		self.version.description2["text"] = "ShoppingList: "
+		self.version.description2.grid(row=1,column=0,columnspan=1)
+		self.version.result2 = Label(self.version,height=1,width=15)
+		if updateChecker.shoppingCheck(shoppingList.version) == 1:
+			self.version.result2["text"] = "It is up to date"
+		elif updateChecker.shoppingCheck(shoppingList.version) == 0:
+			self.version.result2["text"] = "It is outdated"
+		self.version.result2.grid(column=1,row=1,columnspan=1)
+
 	def saveSettings(self):
 		shoppingList.defineServer(self.other.inputServer.get(1.0,END).strip())
 		print self.other.inputServer.get(1.0,END).strip()
@@ -29,7 +56,7 @@ class Application(Frame):
 		self.other.title("Second Window")
 
 		# First line
-		self.other.description = Label(self.other, height=1, width=15,)
+		self.other.description = Label(self.other, height=1, width=15)
 		self.other.description["text"] = "Server:"
 		self.other.description.grid(row=0, column=0, columnspan=1)
 		shoppingList.getSettings(True)
@@ -74,7 +101,8 @@ class Application(Frame):
 		self.tkMenu = Menu(self.menu) 
 		self.menu.add_cascade(label="ShoppingList", menu=self.tkMenu)
 		self.tkMenu.add_command(label="Connect...", command=self.Preferences)	
-	
+		self.tkMenu.add_command(label="Update", command=self.checkVersion)
+
 	def createWindow(self):
 		self.createMenu()
 		#settings for the grid
@@ -142,7 +170,6 @@ class Application(Frame):
 		Frame.__init__(self, master)
 		self.pack()
 		self.createWindow()
-
 root = Tk()
 app = Application(master = root)
 app.mainloop()
