@@ -3,14 +3,14 @@
 from sys import argv
 import cPickle
 from urllib2 import urlopen
-
+import updateChecker
 
 # -----------------------------------------------------------
 # --------------------- VARIABLES ---------------------------
 # -----------------------------------------------------------
 # -----------------------------------------------------------
 
-version = 0
+version = 1
 serverList = []
 usr = ""
 filepath = "./pickle"
@@ -41,6 +41,20 @@ try:
 except IOError:
 	config = open(CONFIG,"w")
 	config.close()
+
+
+# -----------------------------------------------------------
+# --------------------- UPDATE RELATED  ---------------------
+# -----------------------------------------------------------
+# -----------------------------------------------------------
+
+def versionCheck():
+	print "You are using version:"+str(version)
+	if updateChecker.shoppingCheck(version) == 1:
+		print "ShoppingList is up to date"
+	elif updateChecker.shoppingCheck(version) == 0:
+		print "The shoppingList is outdated"
+
 
 # -----------------------------------------------------------
 # ---------------- SERVER RELATED FUNCTIONS -----------------
@@ -173,6 +187,7 @@ def printHelp():
 	print "Options\n----------------\n -h or --help - displays this.\n -a  - add the following string to the shopping list. \n -r  - remove the following string  from the list, if found.\n -p or --print - prints the items currently on the list\n"
 	print " --user - set username for external server\n --password - set password for external server\n --server - set server address\n"
 	print " --sadd - add item to server shoppingList\n --srem - remove item from server shoppingList\n --serverList - print the list from the server\n"
+	print " --version or -v - print if the version is up to date\n"
 
 # -----------------------------------------------------------
 # ----------------------- MAIN BODY -------------------------
@@ -221,6 +236,8 @@ def eventHandler():
 			clearList()	
 		elif(argv[1] == "--serverList"):
 			printPickleServer()
+		elif(argv[1] == "--version") or (argv[1] == "-v"):
+			versionCheck()
 		else:
 			printHelp()
 	
