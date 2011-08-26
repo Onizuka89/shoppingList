@@ -3,7 +3,7 @@
 
 from Tkinter import *
 import shoppingList
-
+version = 0
 
 class Application(Frame):	
 	
